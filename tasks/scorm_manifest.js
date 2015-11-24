@@ -55,7 +55,6 @@ module.exports = function(grunt) {
         
         // Iterate over all specified file groups.
         this.files.forEach(function(f) {
-            
             //Make sure multiple files have been specified in Gruntfile
             if (!f.orig.expand) {
                 grunt.log.warn('Multiple files not specified.');
@@ -66,21 +65,19 @@ module.exports = function(grunt) {
             if (f.src.indexOf('imsmanifest.xml') > -1) {
                 return false;
             }
-            
-            f.src.filter(function(filepath) {
-                if (!grunt.file.exists(filepath)) {
-                    grunt.log.warn('Source file "' + filepath + '" not found.');
-                    return false;
-                } else {
-                    var tObj = {
-                        file: {
-                            '@href': filepath,
-                        },
-                    };
-                    xmlTokens.fileArr.push(tObj);
-                    return true;
-                }
-            });
+
+            if (!grunt.file.exists(f.src[0])) {
+                grunt.log.warn('Source file "' + f.src[0] + '" not found.');
+                return false;
+            } else {
+                var tObj = {
+                    file: {
+                        '@href': f.dest,
+                    },
+                };
+                xmlTokens.fileArr.push(tObj);
+                return true;
+            }
         });
         
         //Declare XMl structure
